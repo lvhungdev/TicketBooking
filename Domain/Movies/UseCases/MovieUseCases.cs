@@ -1,32 +1,49 @@
+using Domain.Errors;
 using Domain.Movies.Models;
+using Domain.Movies.Ports;
+using Domain.Movies.Validations;
 using FluentResults;
+using FluentValidation.Results;
 
 namespace Domain.Movies.UseCases;
 
 public class MovieUseCases : IMovieUseCases
 {
+    private readonly IMovieRepository movieRepo;
+
+    public MovieUseCases(IMovieRepository movieRepo)
+    {
+        this.movieRepo = movieRepo;
+    }
+
     public Task<List<Movie>> GetAllMovies()
     {
-        throw new NotImplementedException();
+        return movieRepo.GetAllMovies();
     }
 
     public Task<Movie?> GetMovieById(string id)
     {
-        throw new NotImplementedException();
+        return movieRepo.GetMovieById(id);
     }
 
-    public Task<Result<Movie>> CreateMovie(Movie movie)
+    public async Task<Result<Movie>> CreateMovie(Movie movie)
     {
-        throw new NotImplementedException();
+        ValidationResult validationResult = await new MovieValidator().ValidateAsync(movie);
+        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+
+        return await movieRepo.CreateMovie(movie);
     }
 
-    public Task<Result<Movie>> UpdateMovie(Movie movie)
+    public async Task<Result<Movie>> UpdateMovie(Movie movie)
     {
-        throw new NotImplementedException();
+        Movie? existingMovie = await GetMovieById(movie.Id);
+        if (existingMovie == null) return Result.Fail(new IdNotFoundError());
+
+        return await movieRepo.UpdateMovie(movie);
     }
 
     public Task<Result<string>> DeleteMovie(string id)
     {
-        throw new NotImplementedException();
+        return movieRepo.DeleteMovie(id);
     }
 }
