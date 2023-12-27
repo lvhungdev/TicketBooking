@@ -43,9 +43,9 @@ public class MovieUseCases : IMovieUseCases
         Movie? existingMovie = await GetMovieById(movie.Id);
         if (existingMovie == null) return Result.Fail(new IdNotFoundError(movie.Id));
 
-        movie.UpdatedAt = DateTimeOffset.Now;
+        existingMovie.UpdatedAt = DateTimeOffset.Now;
 
-        return await movieRepo.UpdateMovie(movie);
+        return await movieRepo.UpdateMovie(existingMovie);
     }
 
     public Task<Result<string>> DeleteMovie(string id)
