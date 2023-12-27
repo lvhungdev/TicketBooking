@@ -41,7 +41,7 @@ public class MovieUseCases : IMovieUseCases
     public async Task<Result<Movie>> UpdateMovie(Movie movie)
     {
         Movie? existingMovie = await GetMovieById(movie.Id);
-        if (existingMovie == null) return Result.Fail(new IdNotFoundError());
+        if (existingMovie == null) return Result.Fail(new IdNotFoundError(movie.Id));
 
         movie.UpdatedAt = DateTimeOffset.Now;
 
