@@ -40,10 +40,17 @@ public class MovieUseCases : IMovieUseCases
 
     public async Task<Result<Movie>> UpdateMovie(Movie movie)
     {
+        ValidationResult validationResult = await new MovieValidator().ValidateAsync(movie);
+        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+
         Movie? existingMovie = await GetMovieById(movie.Id);
         if (existingMovie == null) return Result.Fail(new IdNotFoundError(movie.Id));
 
         existingMovie.UpdatedAt = DateTimeOffset.Now;
+        existingMovie.Title = movie.Title;
+        existingMovie.Description = movie.Description;
+        existingMovie.DurationInSecond = movie.DurationInSecond;
+        existingMovie.Genre = movie.Genre;
 
         return await movieRepo.UpdateMovie(existingMovie);
     }

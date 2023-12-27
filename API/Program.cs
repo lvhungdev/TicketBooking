@@ -20,6 +20,7 @@ public static class Program
         WebApplication app = builder.Build();
 
         app.UseHttpsRedirection();
+        app.UseExceptionHandler("/api/error");
 
         // app.UseAuthorization();
 

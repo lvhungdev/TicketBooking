@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.Movies;
 
-[ApiController]
 [Route("api/movie")]
-public class MovieController : ControllerBase
+public class MovieController : ApiController
 {
     private readonly IMovieUseCases movieUseCases;
 
@@ -43,12 +42,7 @@ public class MovieController : ControllerBase
     {
         Result<Movie> movieResult = await movieUseCases.CreateMovie(dto.MapToMovie());
 
-        if (movieResult.IsFailed)
-        {
-            return new BadRequestObjectResult(movieResult.Reasons);
-        }
-
-        return Ok(movieResult.Value);
+        return movieResult.IsFailed ? Problem(movieResult.Errors) : Ok(movieResult.Value);
     }
 
     [HttpPut("{id}")]
@@ -59,12 +53,7 @@ public class MovieController : ControllerBase
 
         Result<Movie> movieResult = await movieUseCases.UpdateMovie(movie);
 
-        if (movieResult.IsFailed)
-        {
-            return new BadRequestObjectResult(movieResult.Reasons);
-        }
-
-        return Ok(movieResult.Value);
+        return movieResult.IsFailed ? Problem(movieResult.Errors) : Ok(movieResult.Value);
     }
 
     [HttpDelete("{id}")]
@@ -72,11 +61,6 @@ public class MovieController : ControllerBase
     {
         Result<string> result = await movieUseCases.DeleteMovie(id);
 
-        if (result.IsFailed)
-        {
-            return new BadRequestObjectResult(result.Reasons);
-        }
-
-        return Ok();
+        return result.IsFailed ? Problem(result.Errors) : Ok();
     }
 }
