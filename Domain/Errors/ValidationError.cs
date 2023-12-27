@@ -3,19 +3,15 @@ using FluentValidation.Results;
 
 namespace Domain.Errors;
 
-public class ValidationError : IError
+public class ValidationError : Error
 {
-    public ValidationError(IEnumerable<string> errors)
+    public ValidationError(IEnumerable<string> errors) : base("Validation Failure")
     {
-        Reasons = errors.Select(err => (IError)new Error(err)).ToList();
+        Reasons.AddRange(errors.Select(err => (IError)new Error(err)).ToList());
     }
 
-    public ValidationError(IEnumerable<ValidationFailure> errors)
+    public ValidationError(IEnumerable<ValidationFailure> errors) : base("Validation Failure")
     {
-        Reasons = errors.Select(err => (IError)new Error(err.ToString())).ToList();
+        Reasons.AddRange(errors.Select(err => (IError)new Error(err.ToString())).ToList());
     }
-
-    public string Message { get; } = "Validation Failure";
-    public Dictionary<string, object> Metadata { get; } = new();
-    public List<IError> Reasons { get; }
 }

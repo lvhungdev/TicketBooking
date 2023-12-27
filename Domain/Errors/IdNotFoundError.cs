@@ -2,14 +2,10 @@ using FluentResults;
 
 namespace Domain.Errors;
 
-public class IdNotFoundError : IError
+public class IdNotFoundError : Error
 {
-    public IdNotFoundError()
+    public IdNotFoundError(string id) : base("Id Not Found")
     {
-        Reasons.Add(new Error(Message));
+        Metadata.Add("Id", id);
     }
-
-    public string Message { get; } = "Id Not Found";
-    public Dictionary<string, object> Metadata { get; } = new();
-    public List<IError> Reasons { get; } = new();
 }

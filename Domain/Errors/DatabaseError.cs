@@ -2,15 +2,9 @@ using FluentResults;
 
 namespace Domain.Errors;
 
-public class DatabaseError : IError
+public class DatabaseError : Error
 {
-    public DatabaseError(Exception exception)
+    public DatabaseError(Exception exception) : base(exception.Message)
     {
-        Message = exception.Message;
-        Reasons.Add(new Error(exception.Message));
     }
-
-    public string Message { get; }
-    public Dictionary<string, object> Metadata { get; } = new();
-    public List<IError> Reasons { get; } = new();
 }
