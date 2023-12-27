@@ -10,4 +10,8 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<MovieEntity> Movies { get; set; } = null!;
+
+    public DbSet<TheaterEntity> Theaters { get; set; } = null!;
+    public DbSet<RoomEntity> Rooms { get; set; } = null!;
+    public DbSet<SeatEntity> Seats { get; set; } = null!;
 }

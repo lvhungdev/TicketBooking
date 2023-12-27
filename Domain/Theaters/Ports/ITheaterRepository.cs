@@ -1,9 +1,9 @@
 using Domain.Theaters.Models;
 using FluentResults;
 
-namespace Domain.Theaters.UseCases;
+namespace Domain.Theaters.Ports;
 
-public interface ITheaterUseCases
+public interface ITheaterRepository
 {
     Task<List<Theater>> GetAllTheaters();
     Task<Theater?> GetTheaterById(string id);
