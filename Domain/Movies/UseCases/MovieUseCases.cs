@@ -31,6 +31,10 @@ public class MovieUseCases : IMovieUseCases
         ValidationResult validationResult = await new MovieValidator().ValidateAsync(movie);
         if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
 
+        movie.Id = Guid.NewGuid().ToString();
+        movie.CreatedAt = DateTimeOffset.Now;
+        movie.UpdatedAt = DateTimeOffset.Now;
+
         return await movieRepo.CreateMovie(movie);
     }
 
@@ -38,6 +42,8 @@ public class MovieUseCases : IMovieUseCases
     {
         Movie? existingMovie = await GetMovieById(movie.Id);
         if (existingMovie == null) return Result.Fail(new IdNotFoundError());
+
+        movie.UpdatedAt = DateTimeOffset.Now;
 
         return await movieRepo.UpdateMovie(movie);
     }
