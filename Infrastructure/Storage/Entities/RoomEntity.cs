@@ -32,4 +32,17 @@ public class RoomEntity : BaseEntity
             },
         };
     }
+
+    public static RoomEntity FromRoom(Room room)
+    {
+        return new RoomEntity
+        {
+            Id = room.Id,
+            CreatedAt = room.CreatedAt,
+            UpdatedAt = room.UpdatedAt,
+            Title = room.Title,
+            TheaterId = null!,
+            Theater = null!
+        };
+    }
 }

@@ -10,4 +10,7 @@ public interface ITheaterRepository
     Task<Result<Theater>> CreateTheater(Theater theater);
     Task<Result<Theater>> UpdateTheater(Theater theater);
     Task<Result<string>> DeleteTheater(string id);
+
+    Task<Result<Room>> CreateRoomForTheater(Room room, string theaterId);
+    Task<Result<string>> DeleteRoomForTheater(string roomId, string theaterId);
 }

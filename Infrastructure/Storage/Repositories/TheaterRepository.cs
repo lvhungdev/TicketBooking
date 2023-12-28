@@ -27,7 +27,10 @@ public class TheaterRepository : ITheaterRepository
 
     public async Task<Theater?> GetTheaterById(string id)
     {
-        TheaterEntity? theater = await dbContext.Theaters.FindAsync(id);
+        TheaterEntity? theater = await dbContext.Theaters
+            .Include(t => t.Rooms).ThenInclude(r => r.Seats)
+            .Where(t => t.Id == id)
+            .FirstOrDefaultAsync();
 
         return theater?.MapToTheater();
     }
@@ -87,5 +90,49 @@ public class TheaterRepository : ITheaterRepository
         }
 
         return Result.Ok(id);
+    }
+
+    public async Task<Result<Room>> CreateRoomForTheater(Room room, string theaterId)
+    {
+        TheaterEntity? theater = await dbContext.Theaters.FindAsync(theaterId);
+        if (theater == null) return Result.Fail(new IdNotFoundError(theaterId));
+
+        theater.Rooms.Add(RoomEntity.FromRoom(room));
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(new DatabaseError(e));
+        }
+
+        return Result.Ok(room);
+    }
+
+    public async Task<Result<string>> DeleteRoomForTheater(string roomId, string theaterId)
+    {
+        TheaterEntity? theater = await dbContext.Theaters
+            .Include(m => m.Rooms)
+            .Where(m => m.Id == theaterId)
+            .FirstOrDefaultAsync();
+        if (theater == null) return Result.Fail(new IdNotFoundError(theaterId));
+
+        RoomEntity? room = theater.Rooms.FirstOrDefault(m => m.Id == roomId);
+        if (room == null) return Result.Fail(new IdNotFoundError(roomId));
+
+        theater.Rooms.Remove(room);
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            return Result.Fail(new DatabaseError(e));
+        }
+
+        return roomId;
     }
 }

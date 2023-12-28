@@ -63,4 +63,20 @@ public class TheaterController : ApiController
 
         return result.IsFailed ? Problem(result.Errors) : Ok();
     }
+
+    [HttpPost("{id}/room")]
+    public async Task<IActionResult> CreateRoomForTheater(string id, [FromBody] RoomReqDto dto)
+    {
+        Result<Room> roomResult = await theaterUseCases.CreateRoomForTheater(dto.MapToRoom(), id);
+
+        return roomResult.IsFailed ? Problem(roomResult.Errors) : Ok(roomResult.Value);
+    }
+
+    [HttpDelete("{theaterId}/room/{roomId}")]
+    public async Task<IActionResult> DeleteRoomForTheater(string theaterId, string roomId)
+    {
+        Result<string> result = await theaterUseCases.DeleteRoomForTheater(roomId, theaterId);
+
+        return result.IsFailed ? Problem(result.Errors) : Ok(result.Value);
+    }
 }

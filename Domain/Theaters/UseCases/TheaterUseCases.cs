@@ -57,4 +57,27 @@ public class TheaterUseCases : ITheaterUseCases
     {
         return theaterRepo.DeleteTheater(id);
     }
+
+    public async Task<Result<Room>> CreateRoomForTheater(Room room, string theaterId)
+    {
+        ValidationResult validationResult = await new RoomValidator().ValidateAsync(room);
+        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+
+        room.Id = Guid.NewGuid().ToString();
+        room.CreatedAt = DateTimeOffset.Now;
+        room.UpdatedAt = DateTimeOffset.Now;
+
+        return await theaterRepo.CreateRoomForTheater(room, theaterId);
+    }
+
+    public async Task<Result<string>> DeleteRoomForTheater(string roomId, string theaterId)
+    {
+        Theater? theater = await theaterRepo.GetTheaterById(theaterId);
+        if (theater == null) return Result.Fail(new IdNotFoundError(theaterId));
+
+        Room? room = theater.Rooms.FirstOrDefault(m => m.Id == roomId);
+        if (room == null) return Result.Fail(new IdNotFoundError(roomId));
+
+        return await theaterRepo.DeleteRoomForTheater(roomId, theaterId);
+    }
 }
