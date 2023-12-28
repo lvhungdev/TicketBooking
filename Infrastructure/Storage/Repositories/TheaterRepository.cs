@@ -39,14 +39,7 @@ public class TheaterRepository : ITheaterRepository
     {
         dbContext.Theaters.Add(TheaterEntity.FromTheater(theater));
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(theater);
     }
@@ -61,14 +54,7 @@ public class TheaterRepository : ITheaterRepository
         theaterToUpdate.Title = theater.Title;
         theaterToUpdate.Address = theater.Address;
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(theater);
     }
@@ -80,14 +66,7 @@ public class TheaterRepository : ITheaterRepository
 
         dbContext.Theaters.Remove(theaterToDelete);
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(id);
     }
@@ -99,14 +78,7 @@ public class TheaterRepository : ITheaterRepository
 
         theater.Rooms.Add(RoomEntity.FromRoom(room));
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(room);
     }
@@ -124,14 +96,7 @@ public class TheaterRepository : ITheaterRepository
 
         theater.Rooms.Remove(room);
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return roomId;
     }

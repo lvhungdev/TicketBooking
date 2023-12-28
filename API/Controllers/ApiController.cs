@@ -18,8 +18,6 @@ public class ApiController : ControllerBase
         {
             IdNotFoundError => Problem(statusCode: (int)HttpStatusCode.NotFound, title: title, detail: detail),
             ValidationError => Problem(statusCode: (int)HttpStatusCode.BadRequest, title: title, detail: detail),
-            DatabaseError => Problem(statusCode: (int)HttpStatusCode.InternalServerError,
-                title: "Something wrong with database connection"),
             _ => Problem(statusCode: (int)HttpStatusCode.InternalServerError)
         };
     }

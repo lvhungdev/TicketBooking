@@ -34,14 +34,7 @@ public class MovieRepository : IMovieRepository
     {
         dbContext.Movies.Add(MovieEntity.FromMovie(movie));
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(movie);
     }
@@ -58,14 +51,7 @@ public class MovieRepository : IMovieRepository
         toBeUpdatedMovie.DurationInSecond = movie.DurationInSecond;
         toBeUpdatedMovie.Genre = movie.Genre;
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(movie);
     }
@@ -77,14 +63,7 @@ public class MovieRepository : IMovieRepository
 
         dbContext.Movies.Remove(toBeDeletedMovie);
 
-        try
-        {
-            await dbContext.SaveChangesAsync();
-        }
-        catch (Exception e)
-        {
-            return Result.Fail(new DatabaseError(e));
-        }
+        await dbContext.SaveChangesAsync();
 
         return Result.Ok(id);
     }
