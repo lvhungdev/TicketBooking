@@ -10,4 +10,5 @@ public interface IMovieRepository
     Task<Result<Movie>> CreateMovie(Movie movie);
     Task<Result<Movie>> UpdateMovie(Movie movie);
     Task<Result<string>> DeleteMovie(string id);
+    Task SaveChanges();
 }

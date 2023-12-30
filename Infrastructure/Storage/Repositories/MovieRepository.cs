@@ -30,13 +30,11 @@ public class MovieRepository : IMovieRepository
         return movie?.MapToMovie();
     }
 
-    public async Task<Result<Movie>> CreateMovie(Movie movie)
+    public Task<Result<Movie>> CreateMovie(Movie movie)
     {
         dbContext.Movies.Add(MovieEntity.FromMovie(movie));
 
-        await dbContext.SaveChangesAsync();
-
-        return Result.Ok(movie);
+        return Task.FromResult(Result.Ok(movie));
     }
 
     public async Task<Result<Movie>> UpdateMovie(Movie movie)
@@ -51,8 +49,6 @@ public class MovieRepository : IMovieRepository
         toBeUpdatedMovie.DurationInSecond = movie.DurationInSecond;
         toBeUpdatedMovie.Genre = movie.Genre;
 
-        await dbContext.SaveChangesAsync();
-
         return Result.Ok(movie);
     }
 
@@ -63,8 +59,11 @@ public class MovieRepository : IMovieRepository
 
         dbContext.Movies.Remove(toBeDeletedMovie);
 
-        await dbContext.SaveChangesAsync();
-
         return Result.Ok(id);
+    }
+
+    public async Task SaveChanges()
+    {
+        await dbContext.SaveChangesAsync();
     }
 }

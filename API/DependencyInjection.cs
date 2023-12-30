@@ -1,7 +1,6 @@
 using System.Reflection;
 using Domain.Common.Behaviors;
 using Domain.Movies.Ports;
-using Domain.Movies.UseCases;
 using Domain.Theaters.Ports;
 using Domain.Theaters.UseCases;
 using Domain.Users.Ports;
@@ -28,7 +27,6 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
 
-        services.AddScoped<IMovieUseCases, MovieUseCases>();
         services.AddScoped<IMovieRepository, MovieRepository>();
 
         services.AddScoped<ITheaterUseCases, TheaterUseCases>();
