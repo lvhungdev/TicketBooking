@@ -1,4 +1,4 @@
-using Domain.Models;
+using Domain.Common.Models;
 
 namespace Domain.Movies.Models;
 
@@ -15,5 +15,5 @@ public enum Genre
     Unset,
     Action,
     Drama,
-    Romance,
+    Romance
 }

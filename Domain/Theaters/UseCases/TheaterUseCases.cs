@@ -1,4 +1,4 @@
-using Domain.Errors;
+using Domain.Common.Errors;
 using Domain.Theaters.Models;
 using Domain.Theaters.Ports;
 using Domain.Theaters.Validations;
@@ -29,7 +29,7 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Theater>> CreateTheater(Theater theater)
     {
         ValidationResult validationResult = await new TheaterValidator().ValidateAsync(theater);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
 
         theater.Id = Guid.NewGuid().ToString();
         theater.CreatedAt = DateTimeOffset.Now;
@@ -41,7 +41,7 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Theater>> UpdateTheater(Theater theater)
     {
         ValidationResult validationResult = await new TheaterValidator().ValidateAsync(theater);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
 
         Theater? existingTheater = await GetTheaterById(theater.Id);
         if (existingTheater == null) return Result.Fail(new IdNotFoundError(theater.Id));
@@ -61,7 +61,7 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Room>> CreateRoomForTheater(Room room, string theaterId)
     {
         ValidationResult validationResult = await new RoomValidator().ValidateAsync(room);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
 
         room.Id = Guid.NewGuid().ToString();
         room.CreatedAt = DateTimeOffset.Now;

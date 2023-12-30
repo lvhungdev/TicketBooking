@@ -29,10 +29,7 @@ public class MovieController : ApiController
     {
         Movie? movie = await movieUseCases.GetMovieById(id);
 
-        if (movie == null)
-        {
-            return new NotFoundResult();
-        }
+        if (movie == null) return new NotFoundResult();
 
         return Ok(movie);
     }

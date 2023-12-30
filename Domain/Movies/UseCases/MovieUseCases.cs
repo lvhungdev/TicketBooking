@@ -1,4 +1,4 @@
-using Domain.Errors;
+using Domain.Common.Errors;
 using Domain.Movies.Models;
 using Domain.Movies.Ports;
 using Domain.Movies.Validations;
@@ -29,7 +29,7 @@ public class MovieUseCases : IMovieUseCases
     public async Task<Result<Movie>> CreateMovie(Movie movie)
     {
         ValidationResult validationResult = await new MovieValidator().ValidateAsync(movie);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
 
         movie.Id = Guid.NewGuid().ToString();
         movie.CreatedAt = DateTimeOffset.Now;
@@ -41,7 +41,7 @@ public class MovieUseCases : IMovieUseCases
     public async Task<Result<Movie>> UpdateMovie(Movie movie)
     {
         ValidationResult validationResult = await new MovieValidator().ValidateAsync(movie);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationError(validationResult.Errors));
+        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
 
         Movie? existingMovie = await GetMovieById(movie.Id);
         if (existingMovie == null) return Result.Fail(new IdNotFoundError(movie.Id));

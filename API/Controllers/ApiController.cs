@@ -1,5 +1,5 @@
 using System.Net;
-using Domain.Errors;
+using Domain.Common.Errors;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,8 @@ public class ApiController : ControllerBase
         return error switch
         {
             IdNotFoundError => Problem(statusCode: (int)HttpStatusCode.NotFound, title: title, detail: detail),
-            ValidationError => Problem(statusCode: (int)HttpStatusCode.BadRequest, title: title, detail: detail),
+            ValidationFailedError => Problem(statusCode: (int)HttpStatusCode.BadRequest, title: title, detail: detail),
+            EmailExistedError => Problem(statusCode: (int)HttpStatusCode.Conflict, title: title, detail: detail),
             _ => Problem(statusCode: (int)HttpStatusCode.InternalServerError)
         };
     }

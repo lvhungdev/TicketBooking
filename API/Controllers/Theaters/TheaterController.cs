@@ -29,10 +29,7 @@ public class TheaterController : ApiController
     {
         Theater? theater = await theaterUseCases.GetTheaterById(id);
 
-        if (theater == null)
-        {
-            return new NotFoundResult();
-        }
+        if (theater == null) return new NotFoundResult();
 
         return Ok(theater);
     }

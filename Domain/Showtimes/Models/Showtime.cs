@@ -1,4 +1,4 @@
-using Domain.Models;
+using Domain.Common.Models;
 using Domain.Movies.Models;
 using Domain.Theaters.Models;
 

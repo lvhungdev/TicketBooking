@@ -14,4 +14,5 @@ public class AppDbContext : DbContext
     public DbSet<TheaterEntity> Theaters { get; set; } = null!;
     public DbSet<RoomEntity> Rooms { get; set; } = null!;
     public DbSet<SeatEntity> Seats { get; set; } = null!;
+    public DbSet<UserEntity> Users { get; set; } = null!;
 }

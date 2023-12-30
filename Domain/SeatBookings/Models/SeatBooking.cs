@@ -1,4 +1,4 @@
-using Domain.Models;
+using Domain.Common.Models;
 using Domain.Showtimes.Models;
 using Domain.Theaters.Models;
 
@@ -16,5 +16,5 @@ public enum SeatStatus
 {
     Available,
     Booked,
-    Reserved,
+    Reserved
 }

@@ -1,4 +1,4 @@
-using Domain.Errors;
+using Domain.Common.Errors;
 using Domain.Movies.Models;
 using Domain.Movies.Ports;
 using FluentResults;

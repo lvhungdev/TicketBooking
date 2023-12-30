@@ -1,4 +1,4 @@
-using Domain.Errors;
+using Domain.Common.Errors;
 using Domain.Theaters.Models;
 using Domain.Theaters.Ports;
 using FluentResults;

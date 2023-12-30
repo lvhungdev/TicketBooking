@@ -1,4 +1,4 @@
-namespace Domain.Models;
+namespace Domain.Common.Models;
 
 public class BaseModel
 {

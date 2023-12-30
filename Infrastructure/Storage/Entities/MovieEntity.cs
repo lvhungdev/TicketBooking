@@ -20,7 +20,7 @@ public class MovieEntity : BaseEntity
             Title = Title,
             Description = Description,
             DurationInSecond = DurationInSecond,
-            Genre = Genre,
+            Genre = Genre
         };
     }
 

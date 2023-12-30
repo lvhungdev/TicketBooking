@@ -19,7 +19,7 @@ public class TheaterEntity : BaseEntity
             UpdatedAt = UpdatedAt,
             Title = Title,
             Address = Address,
-            Rooms = Rooms.Select(m => m.MapToRoom()).ToList(),
+            Rooms = Rooms.Select(m => m.MapToRoom()).ToList()
         };
     }
 

@@ -29,7 +29,7 @@ public class RoomEntity : BaseEntity
                 Title = Theater.Title,
                 Address = Theater.Address,
                 Rooms = new List<Room>()
-            },
+            }
         };
     }
 
