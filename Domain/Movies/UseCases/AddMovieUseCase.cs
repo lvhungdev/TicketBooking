@@ -1,12 +1,23 @@
+using Domain.Common.Behaviors;
 using Domain.Movies.Models;
 using Domain.Movies.Ports;
+using Domain.Users.Models;
 using FluentResults;
 using FluentValidation;
 using MediatR;
 
 namespace Domain.Movies.UseCases;
 
-public record AddMovieRequest(string Title, string? Description, int DurationInSecond, Genre Genre) : IRequest<Result<Movie>>;
+public record AddMovieRequest(string Title, string? Description, int DurationInSecond, Genre Genre)
+    : IAuthorizedRequest<Result<Movie>>
+{
+    private readonly List<Role> requiredRoles = new() { Role.Admin };
+
+    public List<Role> GetRequiredRoles()
+    {
+        return requiredRoles;
+    }
+}
 
 public class AddMovieRequestHandler : IRequestHandler<AddMovieRequest, Result<Movie>>
 {

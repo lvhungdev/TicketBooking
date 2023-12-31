@@ -1,4 +1,5 @@
 using System.Text;
+using API.Authorization;
 using API.Configurations;
 using Infrastructure.Storage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -48,6 +49,8 @@ public static class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseAuthorizationService();
 
         app.MapControllers();
 

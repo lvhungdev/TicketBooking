@@ -1,6 +1,8 @@
+using Domain.Common.Behaviors;
 using Domain.Common.Errors;
 using Domain.Movies.Models;
 using Domain.Movies.Ports;
+using Domain.Users.Models;
 using FluentResults;
 using FluentValidation;
 using MediatR;
@@ -8,7 +10,15 @@ using MediatR;
 namespace Domain.Movies.UseCases;
 
 public record UpdateMovieRequest(string Id, string Title, string? Description, int DurationInSecond, Genre Genre)
-    : IRequest<Result<Movie>>;
+    : IAuthorizedRequest<Result<Movie>>
+{
+    private readonly List<Role> requiredRoles = new() { Role.Admin };
+
+    public List<Role> GetRequiredRoles()
+    {
+        return requiredRoles;
+    }
+}
 
 public class UpdateMovieRequestHandler : IRequestHandler<UpdateMovieRequest, Result<Movie>>
 {

@@ -19,6 +19,7 @@ public class ApiController : ControllerBase
             IdNotFoundError => Problem(statusCode: (int)HttpStatusCode.NotFound, title: title, detail: detail),
             ValidationFailedError => Problem(statusCode: (int)HttpStatusCode.BadRequest, title: title, detail: detail),
             EmailExistedError => Problem(statusCode: (int)HttpStatusCode.Conflict, title: title, detail: detail),
+            ForbiddenError => Problem(statusCode: (int)HttpStatusCode.Forbidden, title: title, detail: detail),
             _ => Problem(statusCode: (int)HttpStatusCode.InternalServerError)
         };
     }

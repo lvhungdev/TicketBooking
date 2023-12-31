@@ -8,7 +8,7 @@ namespace Domain.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
-    where TResponse :IResultBase
+    where TResponse : IResultBase
 {
     private readonly IValidator<TRequest>? validator;
 

@@ -1,4 +1,5 @@
 using System.Reflection;
+using API.Authorization;
 using Domain.Common.Behaviors;
 using Domain.Movies.Ports;
 using Domain.Theaters.Ports;
@@ -23,6 +24,9 @@ public static class DependencyInjection
         }
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehavior<,>));
+
+        services.AddScoped<IAuthorizationService, AuthorizationService>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();

@@ -51,7 +51,8 @@ public class AuthenticationController : ApiController
     {
         List<Claim> claims = new()
         {
-            new Claim(ClaimTypes.Email, user.Email)
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role.ToString())
         };
 
         SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(jwtSettings.SigningKey));

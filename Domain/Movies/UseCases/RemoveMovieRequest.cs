@@ -1,12 +1,22 @@
+using Domain.Common.Behaviors;
 using Domain.Common.Errors;
 using Domain.Movies.Models;
 using Domain.Movies.Ports;
+using Domain.Users.Models;
 using FluentResults;
 using MediatR;
 
 namespace Domain.Movies.UseCases;
 
-public record RemoveMovieRequest(string Id) : IRequest<Result<string>>;
+public record RemoveMovieRequest(string Id) : IAuthorizedRequest<Result<string>>
+{
+    private readonly List<Role> requiredRoles = new() { Role.Admin };
+
+    public List<Role> GetRequiredRoles()
+    {
+        return requiredRoles;
+    }
+}
 
 public class RemoveMovieRequestHandler : IRequestHandler<RemoveMovieRequest, Result<string>>
 {
