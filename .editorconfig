@@ -1,0 +1,6 @@
+[*.cs]
+max_line_length = 120
+dotnet_diagnostic.IDE0022.severity = none # Braces for function
+dotnet_diagnostic.IDE0058.severity = none # Unnecessary expression value
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_style_expression_bodied_methods = when_on_single_line
