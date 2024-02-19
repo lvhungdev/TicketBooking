@@ -7,21 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Storage.Repositories;
 
-public class MovieRepository : IMovieRepository
+public class MovieRepository(AppDbContext dbContext) : IMovieRepository
 {
-    private readonly AppDbContext dbContext;
-
-    public MovieRepository(AppDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-
     public async Task<List<Movie>> GetAllMovies()
     {
         List<MovieEntity> movies = await dbContext.Movies.ToListAsync();
-        return movies
-            .Select(m => m.MapToMovie())
-            .ToList();
+        return movies.Select(m => m.MapToMovie()).ToList();
     }
 
     public async Task<Movie?> GetMovieById(string id)
@@ -40,7 +31,10 @@ public class MovieRepository : IMovieRepository
     public async Task<Result<Movie>> UpdateMovie(Movie movie)
     {
         MovieEntity? toBeUpdatedMovie = await dbContext.Movies.FindAsync(movie.Id);
-        if (toBeUpdatedMovie == null) return Result.Fail(new IdNotFoundError(movie.Id));
+        if (toBeUpdatedMovie == null)
+        {
+            return Result.Fail(new IdNotFoundError(movie.Id));
+        }
 
         toBeUpdatedMovie.Title = movie.Title;
         toBeUpdatedMovie.UpdatedAt = movie.UpdatedAt;
@@ -55,7 +49,10 @@ public class MovieRepository : IMovieRepository
     public async Task<Result<string>> DeleteMovie(string id)
     {
         MovieEntity? toBeDeletedMovie = await dbContext.Movies.FindAsync(id);
-        if (toBeDeletedMovie == null) return Result.Fail(new IdNotFoundError(id));
+        if (toBeDeletedMovie == null)
+        {
+            return Result.Fail(new IdNotFoundError(id));
+        }
 
         dbContext.Movies.Remove(toBeDeletedMovie);
 

@@ -8,15 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers.Movies;
 
 [Route("api/movie")]
-public class MovieController : ApiController
+public class MovieController(IMediator mediator) : ApiController
 {
-    private readonly IMediator mediator;
-
-    public MovieController(IMediator mediator)
-    {
-        this.mediator = mediator;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAllMovies()
     {
@@ -32,7 +25,10 @@ public class MovieController : ApiController
         GetMovieByIdRequest req = new(id);
         Movie? movie = await mediator.Send(req);
 
-        if (movie == null) return new NotFoundResult();
+        if (movie == null)
+        {
+            return new NotFoundResult();
+        }
 
         return Ok(movie);
     }

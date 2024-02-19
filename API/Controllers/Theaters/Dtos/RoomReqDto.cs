@@ -8,9 +8,6 @@ public class RoomReqDto
 
     public Room MapToRoom()
     {
-        return new Room
-        {
-            Title = Title
-        };
+        return new Room { Title = Title };
     }
 }

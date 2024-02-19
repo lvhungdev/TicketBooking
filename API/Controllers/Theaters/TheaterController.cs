@@ -7,15 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers.Theaters;
 
 [Route("api/theater")]
-public class TheaterController : ApiController
+public class TheaterController(ITheaterUseCases theaterUseCases) : ApiController
 {
-    private readonly ITheaterUseCases theaterUseCases;
-
-    public TheaterController(ITheaterUseCases theaterUseCases)
-    {
-        this.theaterUseCases = theaterUseCases;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAllTheaters()
     {
@@ -29,7 +22,10 @@ public class TheaterController : ApiController
     {
         Theater? theater = await theaterUseCases.GetTheaterById(id);
 
-        if (theater == null) return new NotFoundResult();
+        if (theater == null)
+        {
+            return new NotFoundResult();
+        }
 
         return Ok(theater);
     }

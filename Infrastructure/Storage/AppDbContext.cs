@@ -3,12 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Storage;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
-
     public DbSet<MovieEntity> Movies { get; set; } = null!;
 
     public DbSet<TheaterEntity> Theaters { get; set; } = null!;

@@ -14,24 +14,18 @@ using Microsoft.IdentityModel.Tokens;
 namespace API.Controllers.Authentication;
 
 [Route("api/authentication")]
-public class AuthenticationController : ApiController
+public class AuthenticationController(IMediator mediator, JwtSettings jwtSettings) : ApiController
 {
-    private readonly IMediator mediator;
-    private readonly JwtSettings jwtSettings;
-
-    public AuthenticationController(IMediator mediator, JwtSettings jwtSettings)
-    {
-        this.mediator = mediator;
-        this.jwtSettings = jwtSettings;
-    }
-
     [HttpPost("sign-in")]
     public async Task<IActionResult> SignIn([FromBody] SignInReqDto dto)
     {
         SignInRequest req = new(dto.Email, dto.Password);
         User? user = await mediator.Send(req);
 
-        if (user == null) return Problem(statusCode: (int)HttpStatusCode.Unauthorized);
+        if (user == null)
+        {
+            return Problem(statusCode: (int)HttpStatusCode.Unauthorized);
+        }
 
         return Ok(new AuthResDto(GenerateJwt(user)));
     }
@@ -42,28 +36,33 @@ public class AuthenticationController : ApiController
         SignUpRequest req = new(dto.Email, dto.Password, dto.FullName);
         Result<User> userResult = await mediator.Send(req);
 
-        if (userResult.IsFailed) return Problem(userResult.Errors);
+        if (userResult.IsFailed)
+        {
+            return Problem(userResult.Errors);
+        }
 
         return Ok(new AuthResDto(GenerateJwt(userResult.Value)));
     }
 
     private string GenerateJwt(User user)
     {
-        List<Claim> claims = new()
-        {
+        List<Claim> claims =
+        [
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, user.Role.ToString())
-        };
+        ];
 
         SymmetricSecurityKey signingKey = new(Encoding.UTF8.GetBytes(jwtSettings.SigningKey));
         SigningCredentials credentials = new(signingKey, SecurityAlgorithms.HmacSha512Signature);
 
-        JwtSecurityToken token = new(
-            claims: claims,
-            issuer: jwtSettings.Issuer,
-            audience: jwtSettings.Audience,
-            signingCredentials: credentials,
-            expires: DateTime.Now.AddDays(1));
+        JwtSecurityToken token =
+            new(
+                claims: claims,
+                issuer: jwtSettings.Issuer,
+                audience: jwtSettings.Audience,
+                signingCredentials: credentials,
+                expires: DateTime.Now.AddDays(1)
+            );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

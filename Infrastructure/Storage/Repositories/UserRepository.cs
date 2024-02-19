@@ -5,15 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Storage.Repositories;
 
-public class UserRepository : IUserRepository
+public class UserRepository(AppDbContext dbContext) : IUserRepository
 {
-    private readonly AppDbContext dbContext;
-
-    public UserRepository(AppDbContext dbContext)
-    {
-        this.dbContext = dbContext;
-    }
-
     public async Task<List<User>> GetAllUsers()
     {
         List<UserEntity> users = await dbContext.Users.ToListAsync();
@@ -30,9 +23,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> GetUserByEmail(string email)
     {
-        UserEntity? user = await dbContext.Users
-            .Where(m => m.Email == email)
-            .FirstOrDefaultAsync();
+        UserEntity? user = await dbContext.Users.Where(m => m.Email == email).FirstOrDefaultAsync();
 
         return user?.MapToUser();
     }

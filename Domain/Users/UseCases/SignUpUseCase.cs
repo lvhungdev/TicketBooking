@@ -9,32 +9,28 @@ namespace Domain.Users.UseCases;
 
 public record SignUpRequest(string Email, string Password, string FullName) : IRequest<Result<User>>;
 
-public class SignUpRequestHandler : IRequestHandler<SignUpRequest, Result<User>>
+public class SignUpRequestHandler(IUserRepository userRepo, IPasswordHasher passwordHasher)
+    : IRequestHandler<SignUpRequest, Result<User>>
 {
-    private readonly IPasswordHasher passwordHasher;
-    private readonly IUserRepository userRepo;
-
-    public SignUpRequestHandler(IUserRepository userRepo, IPasswordHasher passwordHasher)
-    {
-        this.userRepo = userRepo;
-        this.passwordHasher = passwordHasher;
-    }
-
     public async Task<Result<User>> Handle(SignUpRequest request, CancellationToken cancellationToken)
     {
         User? existingUser = await userRepo.GetUserByEmail(request.Email);
-        if (existingUser != null) return Result.Fail(new EmailExistedError(request.Email));
-
-        User user = new()
+        if (existingUser != null)
         {
-            Id = Guid.NewGuid().ToString(),
-            CreatedAt = DateTimeOffset.Now,
-            UpdatedAt = DateTimeOffset.Now,
-            Email = request.Email,
-            Password = passwordHasher.Hash(request.Password),
-            FullName = request.FullName,
-            Role = Role.User
-        };
+            return Result.Fail(new EmailExistedError(request.Email));
+        }
+
+        User user =
+            new()
+            {
+                Id = Guid.NewGuid().ToString(),
+                CreatedAt = DateTimeOffset.Now,
+                UpdatedAt = DateTimeOffset.Now,
+                Email = request.Email,
+                Password = passwordHasher.Hash(request.Password),
+                FullName = request.FullName,
+                Role = Role.User
+            };
 
         await userRepo.AddUser(user);
         await userRepo.SaveChanges();

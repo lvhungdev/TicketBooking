@@ -5,8 +5,11 @@ namespace Infrastructure.Storage.Entities;
 
 public class MovieEntity : BaseEntity
 {
-    [MaxLength(255)] public string Title { get; set; } = null!;
-    [MaxLength(1024)] public string? Description { get; set; }
+    [MaxLength(255)]
+    public string Title { get; set; } = null!;
+
+    [MaxLength(1024)]
+    public string? Description { get; set; }
     public int DurationInSecond { get; set; }
     public Genre Genre { get; set; } = Genre.Unset;
 

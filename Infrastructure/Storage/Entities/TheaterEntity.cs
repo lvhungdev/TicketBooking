@@ -5,8 +5,11 @@ namespace Infrastructure.Storage.Entities;
 
 public class TheaterEntity : BaseEntity
 {
-    [MaxLength(255)] public string Title { get; set; } = null!;
-    [MaxLength(255)] public string Address { get; set; } = null!;
+    [MaxLength(255)]
+    public string Title { get; set; } = null!;
+
+    [MaxLength(255)]
+    public string Address { get; set; } = null!;
 
     public List<RoomEntity> Rooms { get; } = new();
 

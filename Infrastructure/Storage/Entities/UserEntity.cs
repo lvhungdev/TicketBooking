@@ -5,9 +5,14 @@ namespace Infrastructure.Storage.Entities;
 
 public class UserEntity : BaseEntity
 {
-    [MaxLength(255)] public string Email { get; set; } = null!;
-    [MaxLength(255)] public string Password { get; set; } = null!;
-    [MaxLength(255)] public string FullName { get; set; } = null!;
+    [MaxLength(255)]
+    public string Email { get; set; } = null!;
+
+    [MaxLength(255)]
+    public string Password { get; set; } = null!;
+
+    [MaxLength(255)]
+    public string FullName { get; set; } = null!;
     public Role Role { get; set; }
 
     public User MapToUser()

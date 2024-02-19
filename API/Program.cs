@@ -15,10 +15,11 @@ public static class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddDbContext<AppDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        );
 
-        builder.Services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        builder
+            .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(m =>
             {
                 JwtSettings jwtSettings = builder.Configuration.GetRequiredSection("JwtSettings").Get<JwtSettings>()!;

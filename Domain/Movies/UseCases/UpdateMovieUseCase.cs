@@ -12,7 +12,7 @@ namespace Domain.Movies.UseCases;
 public record UpdateMovieRequest(string Id, string Title, string? Description, int DurationInSecond, Genre Genre)
     : IAuthorizedRequest<Result<Movie>>
 {
-    private readonly List<Role> requiredRoles = new() { Role.Admin };
+    private readonly List<Role> requiredRoles = [Role.Admin];
 
     public List<Role> GetRequiredRoles()
     {
@@ -20,19 +20,15 @@ public record UpdateMovieRequest(string Id, string Title, string? Description, i
     }
 }
 
-public class UpdateMovieRequestHandler : IRequestHandler<UpdateMovieRequest, Result<Movie>>
+public class UpdateMovieRequestHandler(IMovieRepository movieRepo) : IRequestHandler<UpdateMovieRequest, Result<Movie>>
 {
-    private readonly IMovieRepository movieRepo;
-
-    public UpdateMovieRequestHandler(IMovieRepository movieRepo)
-    {
-        this.movieRepo = movieRepo;
-    }
-
     public async Task<Result<Movie>> Handle(UpdateMovieRequest request, CancellationToken cancellationToken)
     {
         Movie? existingMovie = await movieRepo.GetMovieById(request.Id);
-        if (existingMovie == null) return Result.Fail(new IdNotFoundError(request.Id));
+        if (existingMovie == null)
+        {
+            return Result.Fail(new IdNotFoundError(request.Id));
+        }
 
         existingMovie.UpdatedAt = DateTimeOffset.Now;
         existingMovie.Title = request.Title;
@@ -41,7 +37,10 @@ public class UpdateMovieRequestHandler : IRequestHandler<UpdateMovieRequest, Res
         existingMovie.Genre = request.Genre;
 
         Result<Movie> updatedMovieResult = await movieRepo.UpdateMovie(existingMovie);
-        if (updatedMovieResult.IsFailed) return updatedMovieResult;
+        if (updatedMovieResult.IsFailed)
+        {
+            return updatedMovieResult;
+        }
 
         await movieRepo.SaveChanges();
 

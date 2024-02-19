@@ -4,7 +4,6 @@ namespace Domain.Common.Errors;
 
 public class ForbiddenError : Error
 {
-    public ForbiddenError() : base("Forbidden")
-    {
-    }
+    public ForbiddenError()
+        : base("Forbidden") { }
 }

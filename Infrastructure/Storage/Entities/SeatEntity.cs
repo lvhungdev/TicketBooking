@@ -5,9 +5,11 @@ namespace Infrastructure.Storage.Entities;
 
 public class SeatEntity : BaseEntity
 {
-    [MaxLength(255)] public string Title { get; set; } = null!;
+    [MaxLength(255)]
+    public string Title { get; set; } = null!;
 
-    [MaxLength(450)] public string RoomId { get; set; } = null!;
+    [MaxLength(450)]
+    public string RoomId { get; set; } = null!;
     public RoomEntity Room { get; set; } = null!;
 
     public Seat MapToSeat()

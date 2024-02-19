@@ -9,10 +9,6 @@ public class TheaterReqDto
 
     public Theater MapToTheater()
     {
-        return new Theater
-        {
-            Title = Title,
-            Address = Address
-        };
+        return new Theater { Title = Title, Address = Address };
     }
 }

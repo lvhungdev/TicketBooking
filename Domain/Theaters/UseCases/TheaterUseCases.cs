@@ -7,15 +7,8 @@ using FluentValidation.Results;
 
 namespace Domain.Theaters.UseCases;
 
-public class TheaterUseCases : ITheaterUseCases
+public class TheaterUseCases(ITheaterRepository theaterRepo) : ITheaterUseCases
 {
-    private readonly ITheaterRepository theaterRepo;
-
-    public TheaterUseCases(ITheaterRepository theaterRepo)
-    {
-        this.theaterRepo = theaterRepo;
-    }
-
     public Task<List<Theater>> GetAllTheaters()
     {
         return theaterRepo.GetAllTheaters();
@@ -29,7 +22,10 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Theater>> CreateTheater(Theater theater)
     {
         ValidationResult validationResult = await new TheaterValidator().ValidateAsync(theater);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        if (!validationResult.IsValid)
+        {
+            return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        }
 
         theater.Id = Guid.NewGuid().ToString();
         theater.CreatedAt = DateTimeOffset.Now;
@@ -41,10 +37,16 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Theater>> UpdateTheater(Theater theater)
     {
         ValidationResult validationResult = await new TheaterValidator().ValidateAsync(theater);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        if (!validationResult.IsValid)
+        {
+            return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        }
 
         Theater? existingTheater = await GetTheaterById(theater.Id);
-        if (existingTheater == null) return Result.Fail(new IdNotFoundError(theater.Id));
+        if (existingTheater == null)
+        {
+            return Result.Fail(new IdNotFoundError(theater.Id));
+        }
 
         existingTheater.UpdatedAt = DateTimeOffset.Now;
         existingTheater.Title = theater.Title;
@@ -61,7 +63,10 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<Room>> CreateRoomForTheater(Room room, string theaterId)
     {
         ValidationResult validationResult = await new RoomValidator().ValidateAsync(room);
-        if (!validationResult.IsValid) return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        if (!validationResult.IsValid)
+        {
+            return Result.Fail(new ValidationFailedError(validationResult.Errors));
+        }
 
         room.Id = Guid.NewGuid().ToString();
         room.CreatedAt = DateTimeOffset.Now;
@@ -73,10 +78,16 @@ public class TheaterUseCases : ITheaterUseCases
     public async Task<Result<string>> DeleteRoomForTheater(string roomId, string theaterId)
     {
         Theater? theater = await theaterRepo.GetTheaterById(theaterId);
-        if (theater == null) return Result.Fail(new IdNotFoundError(theaterId));
+        if (theater == null)
+        {
+            return Result.Fail(new IdNotFoundError(theaterId));
+        }
 
         Room? room = theater.Rooms.FirstOrDefault(m => m.Id == roomId);
-        if (room == null) return Result.Fail(new IdNotFoundError(roomId));
+        if (room == null)
+        {
+            return Result.Fail(new IdNotFoundError(roomId));
+        }
 
         return await theaterRepo.DeleteRoomForTheater(roomId, theaterId);
     }
